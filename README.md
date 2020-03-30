@@ -1,5 +1,5 @@
 Курс Разработчик Java" в OTUS
-Java programmer course at OTUS
+(Java programmer course at OTUS)
 
 Группа 2020-03
 
