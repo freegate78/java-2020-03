@@ -14,3 +14,8 @@
 Студент:
 Andrey Kuzmin (Андрей Кузьмин)
 akuzmin@mts.ru
+
+public static final String TEMPLATE_NAME = "AnyTemplate";
+    public static final String TEMPLATE_TEXT = "Hi!\n %s \n With best regards, %s";
+    public static final String MESSAGE_TEXT = "How you doing?";
+    public static final String SIGN = "Vasya";
