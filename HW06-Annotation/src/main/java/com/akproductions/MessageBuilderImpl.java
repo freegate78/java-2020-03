@@ -1,7 +1,5 @@
 package com.akproductions;
 
-import static com.akproductions.hw06_main.*;
-
 public class MessageBuilderImpl implements MessageBuilder {
 
   //переменные для тестов reflection
@@ -14,14 +12,18 @@ public class MessageBuilderImpl implements MessageBuilder {
     return "var1="+ var1+ ", var2="+ var2;
   }
 
+  public static final String TEMPLATE_NAME = "AnyTemplate";
+  public static final String TEMPLATE_TEXT = "Hi!\n %s \n With best regards, %s";
+  public static final String MESSAGE_TEXT = "How you doing?";
+  public static final String SIGN = "Vasya";
+  private MessageBuilder messageBuilder;
   private final MessageTemplateProvider templateProvider;
 
-  //конструктор для тестов reflection
   public MessageBuilderImpl() {
-    templateProvider=null;
+    templateProvider=new MessageTemplateProvider();
     getMessageTemplateCalled=0;
   }
-//конструктор для тестов junit
+
   public MessageBuilderImpl(MessageTemplateProvider templateProvider) {
     this.templateProvider = templateProvider;
   }
@@ -38,7 +40,6 @@ public class MessageBuilderImpl implements MessageBuilder {
 
   //метод для тестов reflection
   @Before
-  @SimpleAnnotation
 private void doBefore()
   {
     System.out.println("Before called!!! var1=" + var1+ ", var2="+ var2);
@@ -52,7 +53,7 @@ private void doBefore()
 
   //метод для тестов reflection
   @Test
-  private void doTest(int x)
+  private void doTest()
   {
     var1 += var2;
     System.out.println("Test called!!! var1=" + var1+ ", var2="+ var2);
@@ -83,7 +84,7 @@ private void doBefore()
   @DisplayName(name = " buildMessage3 - проверить генерацию исключения TemplateNotFoundException")
   void buildMessage3() throws Exception {
     //when(provider.getMessageTemplate(TEMPLATE_NAME)).thenReturn(TEMPLATE_TEXT);
-    throw new Exception("[FATAL ERROR] " + TemplateNotFoundException.class.toString());
+    throw new Exception("[ERROR] " + TemplateNotFoundException.class.toString());
   }
 
 }
