@@ -1,4 +1,4 @@
-package com.akproductions;
+package com.akproductions.app;
 
 public class TemplateNotFoundException extends RuntimeException {
 }

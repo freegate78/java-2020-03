@@ -1,8 +1,8 @@
-package com.akproductions;
+package com.akproductions.testframework.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface After {
+public @interface Test {
 }
