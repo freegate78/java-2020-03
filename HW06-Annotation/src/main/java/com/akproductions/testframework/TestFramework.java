@@ -7,25 +7,24 @@ import com.akproductions.testframework.annotations.Test;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.List;
+import java.util.Map;
 
-public class TestFramework {
+public class TestFramework implements TestResult{
     private Class clazz;
-    private HashMap<String,Integer> testResults;
+    private TestResults testResults;
     public TestFramework (String classToTest) throws Exception {
         clazz = Class.forName(classToTest);
-        testResults= new HashMap<String,Integer> ();
+//        testResults= new HashMap<String,Integer> ();
+        testResults= new TestResults <String,Integer> ();
     }
 
-    public HashMap<String,Integer> doTest () throws Exception
+    public Map<String, Integer> doTest () throws Exception
     {
         Method[] methodsAll = clazz.getDeclaredMethods();
         var methodsBefore = new ArrayList<Method>(10);
         var methodsAfter = new ArrayList<Method>(10);
         var methodsTest = new ArrayList<Method>(10);
-        AtomicInteger testSuccess= new AtomicInteger();
-        AtomicInteger testError= new AtomicInteger();
         for (Method method : methodsAll) {
             Annotation[] annotations = method.getDeclaredAnnotations();
             for (Annotation annotation : annotations) {
@@ -41,33 +40,36 @@ public class TestFramework {
         System.out.println("[INFO] --- Test methods:");
         methodsTest.forEach(c ->   System.out.println(c.getName()));
 
-        //make tests
+        return makeTests(methodsTest, methodsBefore, methodsAfter);
+    }
+
+    private Map<String, Integer> makeTests(ArrayList<Method> methodsTest,ArrayList<Method> methodsBefore, ArrayList<Method> methodsAfter) throws Exception
+    {
+        testResults.put("total tests for run:",methodsTest.size());
         methodsTest.forEach(methodTest ->{
             try {
                 var object = clazz.getConstructor().newInstance();
                 invokeMethods(methodsBefore,object,"Before");
                 methodTest.setAccessible(true);
+                int success = 0;
+                int failed=0;
                 try {
                     methodTest.invoke(object);
-                    testSuccess.getAndIncrement();
                     System.out.println("[INFO] --- test "+methodTest.getName()+" completed successfully");
+                    testResults.put(methodTest.getName(),1);
                 } catch (Exception e) {
-                    testError.getAndIncrement();
                     System.out.println("[ERROR] --- error in calling test method  " + methodTest.getName()+ ". reason: " + e.getLocalizedMessage());
+                    testResults.put(methodTest.getName(),0);
                 } finally {invokeMethods(methodsAfter,object,"After");}
             } catch (Exception e) {
-                testError.getAndIncrement();
                 System.out.println("[FATAL ERROR] --- running all test scenario for method " + methodTest.getName() + " failed, reason is: " + e.getLocalizedMessage());
+                testResults.put(methodTest.getName(),0);
             }
         });
-        testResults.put("total", (testSuccess.get() + testError.get()));
-        testResults.put("success", testSuccess.get());
-        testResults.put("failed", testError.get());
-
-        return testResults;
+    return testResults;
     }
 
-    private void invokeMethods(ArrayList<Method> methods,Object object, String typeOfMethod)
+    private void invokeMethods(List<Method> methods, Object object, String typeOfMethod)
     {
         methods.forEach(method ->
         {
