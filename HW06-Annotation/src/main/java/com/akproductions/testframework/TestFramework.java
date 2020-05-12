@@ -8,7 +8,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class TestFramework implements TestResult{
     private Class clazz;
@@ -16,10 +15,10 @@ public class TestFramework implements TestResult{
     public TestFramework (String classToTest) throws Exception {
         clazz = Class.forName(classToTest);
 //        testResults= new HashMap<String,Integer> ();
-        testResults= new TestResults <String,Integer> ();
+        testResults= new TestResults ();
     }
 
-    public Map<String, Integer> doTest () throws Exception
+    public TestResults doTest () throws Exception
     {
         Method[] methodsAll = clazz.getDeclaredMethods();
         var methodsBefore = new ArrayList<Method>(10);
@@ -43,27 +42,25 @@ public class TestFramework implements TestResult{
         return makeTests(methodsTest, methodsBefore, methodsAfter);
     }
 
-    private Map<String, Integer> makeTests(ArrayList<Method> methodsTest,ArrayList<Method> methodsBefore, ArrayList<Method> methodsAfter) throws Exception
+    private TestResults makeTests(List<Method> methodsTest,List<Method> methodsBefore, List<Method> methodsAfter) throws Exception
     {
-        testResults.put("total tests for run:",methodsTest.size());
+        testResults.setTotalCount(methodsTest.size());
         methodsTest.forEach(methodTest ->{
             try {
                 var object = clazz.getConstructor().newInstance();
                 invokeMethods(methodsBefore,object,"Before");
                 methodTest.setAccessible(true);
-                int success = 0;
-                int failed=0;
                 try {
                     methodTest.invoke(object);
                     System.out.println("[INFO] --- test "+methodTest.getName()+" completed successfully");
-                    testResults.put(methodTest.getName(),1);
+                    testResults.addSuccessCount();
                 } catch (Exception e) {
                     System.out.println("[ERROR] --- error in calling test method  " + methodTest.getName()+ ". reason: " + e.getLocalizedMessage());
-                    testResults.put(methodTest.getName(),0);
+                    testResults.addFailedCount();
                 } finally {invokeMethods(methodsAfter,object,"After");}
             } catch (Exception e) {
                 System.out.println("[FATAL ERROR] --- running all test scenario for method " + methodTest.getName() + " failed, reason is: " + e.getLocalizedMessage());
-                testResults.put(methodTest.getName(),0);
+                testResults.addFailedCount();
             }
         });
     return testResults;
