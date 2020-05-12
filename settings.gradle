@@ -10,4 +10,5 @@
 rootProject.name = 'java-2020-03'
 include 'HW01-gradle'
 include 'HW03-ArrayList'
+include 'HW06-Annotation'
 
