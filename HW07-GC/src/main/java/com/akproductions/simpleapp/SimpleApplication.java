@@ -4,15 +4,13 @@ public class SimpleApplication {
 public static void main(String[] args) throws Exception
 {
     printHeapStatistics("init: ");
-    int sizeOfIteration=10000;
-    int sizeOfArray=100000;
+    int sizeOfIteration=60000;
+    int sizeOfArray=1000;
     var memoryLeaker=new LeakMyMemory(sizeOfArray);
     for (int i=0;i<sizeOfIteration;i++){
         memoryLeaker.addMemoryLeaker();
-        Thread.sleep(10);
-        if (i%100==0) {
-            printHeapStatistics("iteration "+i+": ");
-        }
+        //Thread.sleep(1);
+        if (i%10000==0) {printHeapStatistics("iteration "+i+": ");}
     }
 }
 private static void printHeapStatistics(String comment){
