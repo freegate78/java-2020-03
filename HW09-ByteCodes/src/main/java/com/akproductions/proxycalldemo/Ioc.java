@@ -4,7 +4,6 @@ import com.akproductions.testlogging.TestLogging;
 import com.akproductions.testlogging.TestLoggingInterface;
 import com.akproductions.testlogging.annotations.Log;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -15,9 +14,9 @@ public class Ioc {
     }
 
     public static TestLoggingInterface createMyClass() {
-        InvocationHandler handler = new DemoInvocationHandler(new TestLogging());
         return (TestLoggingInterface) Proxy.newProxyInstance(com.akproductions.testlogging.TestLogging.class.getClassLoader(),
-                com.akproductions.testlogging.TestLogging.class.getInterfaces(), handler);
+                com.akproductions.testlogging.TestLogging.class.getInterfaces(),
+                new DemoInvocationHandler(new TestLogging()));
     }
 
     static class DemoInvocationHandler implements InvocationHandler {
@@ -29,15 +28,11 @@ public class Ioc {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            Annotation[] annotations = method.getDeclaredAnnotations();
-            for (Annotation annotation : annotations) {
-                if (annotation.annotationType().equals(Log.class))
+
+            if(method.isAnnotationPresent(Log.class))
                 {
                     System.out.println("[LOG] invoking method:" + method + " with args: "+ args[0]);
-
                 }
-            }
-//                myClass.getAnnotation(Log.class);
             return method.invoke(myClass, args);
         }
 
