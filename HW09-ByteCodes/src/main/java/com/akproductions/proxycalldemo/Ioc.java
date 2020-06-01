@@ -9,10 +9,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 public class Ioc {
-
+    static final boolean EnableLogging = com.akproductions.testlogging.TestLoggingInterface.class.getDeclaredMethods()[0].isAnnotationPresent(Log.class);
     private Ioc() {
     }
-
     public static TestLoggingInterface createMyClass() {
         return (TestLoggingInterface) Proxy.newProxyInstance(com.akproductions.testlogging.TestLogging.class.getClassLoader(),
                 com.akproductions.testlogging.TestLogging.class.getInterfaces(),
@@ -28,11 +27,7 @@ public class Ioc {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
-            if(method.isAnnotationPresent(Log.class))
-                {
-                    System.out.println("[LOG] invoking method:" + method + " with args: "+ args[0]);
-                }
+            if(EnableLogging){System.out.println("[LOG] invoking method:" + method + " with args: "+ args[0]);}
             return method.invoke(myClass, args);
         }
 
