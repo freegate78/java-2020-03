@@ -17,7 +17,6 @@ public class Ioc {
 
     private static List<Class> getLoggedMethods(Method[] methods, Class classOfAnnotation){
         ArrayList<Class> varLoggedMethods = new ArrayList(10);
-        varLoggedMethods.add(classOfAnnotation);
         for (Method method : methods) {
             if (method.isAnnotationPresent(classOfAnnotation)){
                 varLoggedMethods.add(method.getClass());
