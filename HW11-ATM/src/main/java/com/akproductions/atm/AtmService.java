@@ -25,9 +25,9 @@ public class AtmService {
     private static void getMoney(Atm atm, int summToGet) {
         System.out.println("get "+summToGet+":");
         try {
-            Cell[] cells1 = atm.getMoney(summToGet);
-            for (int i = 0; i < cells1.length; i++) {
-                System.out.println(cells1[i].toString());
+            Cupure[] cupures = atm.getMoney(summToGet);
+            for (int i = 0; i < cupures.length; i++) {
+                System.out.println(cupures[i].toString());
             }
         } catch (Exception exp) {
             System.out.println(exp.fillInStackTrace());
@@ -40,12 +40,15 @@ public class AtmService {
     private static void putMoney(Atm atm, Integer[] nominalsLoad, Integer[] countsLoad) {
         System.out.println("put:");
         try {
-            Cell[] cells = new Cell[nominalsLoad.length];
+            //Cell[] cells = new Cell[nominalsLoad.length];
+            Cupure[] cupures=new Cupure[nominalsLoad.length];
             for (int i = 0; i < nominalsLoad.length; i++) {
-                cells[i] = new Cell(nominalsLoad[i], countsLoad[i]);
-                System.out.println(cells[i].toString());
+                //cells[i] = new Cell(nominalsLoad[i], countsLoad[i]);
+                //System.out.println(cells[i].toString());
+                cupures[i] = new Cupure(nominalsLoad[i], countsLoad[i]);
+                System.out.println(cupures[i].toString());
             }
-            atm.putMoney(cells);
+            atm.putMoney(cupures);
         } catch (Exception exp) {
             System.out.println(exp.fillInStackTrace());
         }
