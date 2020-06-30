@@ -19,22 +19,21 @@ public class Atm {
         }
     }
 
-    public void putMoney(Cupure[] cupures) throws Exception {
-        Map<Integer, Integer> preparedCells = new HashMap<Integer, Integer>();
+    public void putMoney(Map<Cupure, Integer> cupures) throws Exception {
+        Map<Integer, Integer> preparedCells = new TreeMap<Integer, Integer>();
 
-        for (int i = 0; i < cupures.length; i++) {
+        for (Map.Entry<Cupure, Integer> cupuresOfSameNominal : cupures.entrySet()) {
             boolean foundNominal = false;
-            for (int j = 0; j < cells.length; j++) {
-                if (cells[j].getNominal() == cupures[i].getNominal()) {
-                    preparedCells.put(this.cells[j].getNominal(), cupures[i].getCount());
+            for (int i = 0; i < cells.length; i++) {
+                if (cupuresOfSameNominal.getKey().getNominal() == this.cells[i].getNominal()) {
+                    preparedCells.put(cupuresOfSameNominal.getKey().getNominal(), cupuresOfSameNominal.getValue());
                     foundNominal = true;
                 }
             }
             if (!(foundNominal)) {
-                throw new Exception("Atm action - Unrecognized cupure with nominal " + cupures[i].getNominal() + " !!!");
+                throw new Exception("Atm action - Unrecognized cupure with nominal " + cupuresOfSameNominal.getKey().getNominal() + " !!!");
             }
         }
-
         for (Map.Entry<Integer, Integer> mapEntry : preparedCells.entrySet()) {
             for (int i = 0; i < cells.length; i++) {
                 if (mapEntry.getKey() == this.cells[i].getNominal()) {
@@ -44,20 +43,20 @@ public class Atm {
         }
     }
 
-    public Cupure[] getMoney(long summa) throws Exception {
+    public Map<Cupure, Integer> getMoney(long summa) throws Exception {
 
-        Map<Integer, Integer> cupuresToGet = new TreeMap<Integer, Integer>();
+        Map<Cupure, Integer> cupuresToGet = new HashMap<Cupure, Integer>();
         long diffSumma = summa;
 
         for (Map.Entry<Integer, Integer> cell : atmCellsSortedByNominal(Collections.reverseOrder()).entrySet()) {
             int castNominal = (int) Math.floor(diffSumma / cell.getKey());
             if (castNominal > 0 && castNominal <= cell.getValue()) {
-                cupuresToGet.put(cell.getKey(), castNominal);
+                cupuresToGet.put(new Cupure(cell.getKey()), castNominal);
                 diffSumma -= cell.getKey() * castNominal;
             }
         }
         if (diffSumma == 0) {
-            return exctractMoneyFromAtm(cupuresToGet);
+            return extractMoneyFromAtm(cupuresToGet);
         }
 
         throw new Exception("Atm action - Cannot give this amount with my cupures!!!");
@@ -73,19 +72,15 @@ public class Atm {
 
     }
 
-    private Cupure[] exctractMoneyFromAtm(Map<Integer, Integer> cupuresToGet) throws Exception {
-        Cupure[] tmpCupures = new Cupure[cupuresToGet.size()];
-        int index = 0;
-        for (Map.Entry<Integer, Integer> mapEntry : cupuresToGet.entrySet()) {
-            tmpCupures[index] = new Cupure(mapEntry.getKey(), mapEntry.getValue());
+    private Map<Cupure, Integer>  extractMoneyFromAtm(Map<Cupure, Integer> cupuresToGet) throws Exception {
+        for (Map.Entry<Cupure, Integer> mapEntry : cupuresToGet.entrySet()) {
             for (int i = 0; i < cells.length; i++) {
-                if (mapEntry.getKey() == this.cells[i].getNominal()) {
+                if (mapEntry.getKey().getNominal() == this.cells[i].getNominal()) {
                     this.cells[i].subCount(mapEntry.getValue());
                 }
             }
-            index++;
         }
-        return tmpCupures;
+        return cupuresToGet;
     }
 
     public long getBalance() {

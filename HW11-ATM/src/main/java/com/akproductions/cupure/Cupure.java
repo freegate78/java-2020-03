@@ -4,22 +4,15 @@ import java.util.Optional;
 
 public class Cupure {
     private final Nominal nominal;
-    private final int count;
-
     public int getNominal() {
         return nominal.getNominal();
-    }
-
-    public int getCount() {
-        return count;
     }
 
     public String getName() {
         return nominal.name();
     }
 
-    public Cupure(int nominal, int count) throws Exception {
-        this.count = count;
+    public Cupure(int nominal) throws Exception {
         try {
             this.nominal = Nominal.find(nominal).get();
         }
@@ -50,7 +43,7 @@ public class Cupure {
 
     @Override
     public String toString() {
-        return "cupure <"+nominal.name()+"> with nominal " + this.nominal.getNominal() + ", amount " + this.count + " pcs.";
+        return "cupure <"+nominal.name()+"> with nominal " + this.nominal.getNominal();
     }
 
 }

@@ -3,6 +3,9 @@ package com.akproductions.atm;
 import com.akproductions.cell.Cell;
 import com.akproductions.cupure.Cupure;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AtmService {
     public static void main(String[] args) throws Exception {
         int initialCupuresCount = 100;
@@ -25,10 +28,9 @@ public class AtmService {
     private static void getMoney(Atm atm, int summToGet) {
         System.out.println("get "+summToGet+":");
         try {
-            Cupure[] cupures = atm.getMoney(summToGet);
-            for (int i = 0; i < cupures.length; i++) {
-                System.out.println(cupures[i].toString());
-            }
+            Map<Cupure, Integer> cupuresToGet = atm.getMoney(summToGet);
+            cupuresToGet.forEach((key, value) -> {System.out.println("Cupure : " + key + ", Count : " + value);});
+
         } catch (Exception exp) {
             System.out.println(exp.fillInStackTrace());
         }
@@ -40,15 +42,13 @@ public class AtmService {
     private static void putMoney(Atm atm, Integer[] nominalsLoad, Integer[] countsLoad) {
         System.out.println("put:");
         try {
-            //Cell[] cells = new Cell[nominalsLoad.length];
-            Cupure[] cupures=new Cupure[nominalsLoad.length];
+            Map<Cupure, Integer> cupuresToPut = new HashMap<Cupure, Integer>();
             for (int i = 0; i < nominalsLoad.length; i++) {
-                //cells[i] = new Cell(nominalsLoad[i], countsLoad[i]);
-                //System.out.println(cells[i].toString());
-                cupures[i] = new Cupure(nominalsLoad[i], countsLoad[i]);
-                System.out.println(cupures[i].toString());
+                cupuresToPut.put(new Cupure(nominalsLoad[i]),countsLoad[i]);
             }
-            atm.putMoney(cupures);
+
+            cupuresToPut.forEach((key, value) -> {System.out.println("Cupure : " + key + ", Count : " + value);});
+            atm.putMoney(cupuresToPut);
         } catch (Exception exp) {
             System.out.println(exp.fillInStackTrace());
         }

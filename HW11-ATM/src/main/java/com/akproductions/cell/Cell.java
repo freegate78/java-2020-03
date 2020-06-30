@@ -6,7 +6,7 @@ public class Cell{
     Cupure cupure;
     int count;
     public Cell(int nominal, int count) throws Exception {
-        cupure = new Cupure(nominal,count);
+        cupure = new Cupure(nominal);
         this.count=count;
     }
 
