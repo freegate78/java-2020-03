@@ -2,11 +2,22 @@ package com.akproductions.cell;
 
 import com.akproductions.cupure.Cupure;
 
-public class Cell extends Cupure{
-
+public class Cell{
+    Cupure cupure;
+    int count;
     public Cell(int nominal, int count) throws Exception {
-        super(nominal, count);
+        cupure = new Cupure(nominal,count);
+        this.count=count;
     }
+
+    public int getNominal() {
+        return cupure.getNominal();
+    }
+
+    public int getCount() {
+        return count;
+    }
+
 
     public void addCount(int count) {
         this.count+=count;

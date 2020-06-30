@@ -7,7 +7,6 @@ import java.util.*;
 
 public class Atm {
     private Cell cells[];
-    final String SORT_ORDER_FROM_BIG_TO_SMALL = "FromBigToSmall";
 
     public Atm(Cell[] cellsLoad) throws Exception {
         installCells(cellsLoad);
@@ -50,7 +49,7 @@ public class Atm {
         Map<Integer, Integer> cupuresToGet = new TreeMap<Integer, Integer>();
         long diffSumma = summa;
 
-        for (Map.Entry<Integer, Integer> cell : atmCellsSortedByNominal(SORT_ORDER_FROM_BIG_TO_SMALL).entrySet()) {
+        for (Map.Entry<Integer, Integer> cell : atmCellsSortedByNominal(Collections.reverseOrder()).entrySet()) {
             int castNominal = (int) Math.floor(diffSumma / cell.getKey());
             if (castNominal > 0 && castNominal <= cell.getValue()) {
                 cupuresToGet.put(cell.getKey(), castNominal);
@@ -64,13 +63,9 @@ public class Atm {
         throw new Exception("Atm action - Cannot give this amount with my cupures!!!");
     }
 
-    private Map<Integer, Integer> atmCellsSortedByNominal(String sortOrder) {
+    private Map<Integer, Integer> atmCellsSortedByNominal(Comparator<Integer> sortOrder) {
         Map<Integer, Integer> innerCells;
-        if (sortOrder.equals(SORT_ORDER_FROM_BIG_TO_SMALL)) {
-            innerCells = new TreeMap<Integer, Integer>(Collections.reverseOrder());
-        } else {
-            innerCells = new TreeMap<Integer, Integer>();
-        }
+        innerCells = new TreeMap<Integer, Integer>(sortOrder);
         for (int i = cells.length - 1; i >= 0; i--) {
             innerCells.put(this.cells[i].getNominal(), this.cells[i].getCount());
         }
@@ -79,10 +74,10 @@ public class Atm {
     }
 
     private Cupure[] exctractMoneyFromAtm(Map<Integer, Integer> cupuresToGet) throws Exception {
-        Cupure[] tmpCupures = new Cell[cupuresToGet.size()];
+        Cupure[] tmpCupures = new Cupure[cupuresToGet.size()];
         int index = 0;
         for (Map.Entry<Integer, Integer> mapEntry : cupuresToGet.entrySet()) {
-            tmpCupures[index] = new Cell(mapEntry.getKey(), mapEntry.getValue());
+            tmpCupures[index] = new Cupure(mapEntry.getKey(), mapEntry.getValue());
             for (int i = 0; i < cells.length; i++) {
                 if (mapEntry.getKey() == this.cells[i].getNominal()) {
                     this.cells[i].subCount(mapEntry.getValue());

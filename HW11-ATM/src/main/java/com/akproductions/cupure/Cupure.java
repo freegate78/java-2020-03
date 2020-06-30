@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public class Cupure {
     private final Nominal nominal;
-    protected int count;
+    private final int count;
 
     public int getNominal() {
         return nominal.getNominal();
