@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 public class AnyObject {
+    private double primitiveOfDouble=1.2;
     private int primitiveOfInt;
     private byte primitiveOfByte;
     private long primitiveOfLong;
@@ -16,15 +17,15 @@ public class AnyObject {
     private Long wrapperOfLong;
     private Character wrapperOfChar;
 
-    private int [] arr_primitiveOfInt;
-    private byte [] arr_primitiveOfByte;
-    private long [] arr_primitiveOfLong;
-    private char [] arr_primitiveOfChar;
+    private int[] arr_primitiveOfInt;
+    private byte[] arr_primitiveOfByte;
+    private long[] arr_primitiveOfLong;
+    private char[] arr_primitiveOfChar;
 
-    private Integer [] arr_wrapperOfInt;
-    private Byte [] arr_wrapperOfByte;
-    private Long [] arr_wrapperOfLong;
-    private Character [] arr_wrapperOfChar;
+    private Integer[] arr_wrapperOfInt;
+    private Byte[] arr_wrapperOfByte;
+    private Long[] arr_wrapperOfLong;
+    private Character[] arr_wrapperOfChar;
 
     private Collection objectOfCollection;
 
@@ -50,6 +51,9 @@ public class AnyObject {
 
 
     public AnyObject() {
+    }
+
+    public AnyObject init() {
         this.primitiveOfInt = 0;
         this.primitiveOfByte = 1;
         this.primitiveOfLong = 2;
@@ -58,20 +62,20 @@ public class AnyObject {
         this.wrapperOfByte = 5;
         this.wrapperOfLong = Long.valueOf(6);
         this.wrapperOfChar = 7;
-        this.arr_primitiveOfInt = new int [] {8, 9};
-        this.arr_primitiveOfByte = new byte [] {10,11};
-        this.arr_primitiveOfLong = new long [] {12,13};
-        this.arr_primitiveOfChar = new char []  {14,15};
-        this.arr_wrapperOfInt = new Integer[]  {16,17};
-        this.arr_wrapperOfByte = new Byte []  {18,19};
-        this.arr_wrapperOfLong = new Long []  {Long.valueOf(20), Long.valueOf(21)};
-        this.arr_wrapperOfChar = new Character[]  {22,23};
-        this.objectOfCollection = new ArrayList();
-        objectOfCollection.add("test1");
-        objectOfCollection.add("test2");
-        objectOfCollection.add("test3");
+        this.arr_primitiveOfInt = new int[]{8, 9};
+        this.arr_primitiveOfByte = new byte[]{10, 11};
+        this.arr_primitiveOfLong = new long[]{12, 13};
+        this.arr_primitiveOfChar = new char[]{14, 15};
+        this.arr_wrapperOfInt = new Integer[]{16, 17};
+        this.arr_wrapperOfByte = new Byte[]{18, 19};
+        this.arr_wrapperOfLong = new Long[]{Long.valueOf(20), Long.valueOf(21)};
+        this.arr_wrapperOfChar = new Character[]{22, 23};
+        //this.objectOfCollection = new ArrayList();
+        //objectOfCollection.add("test1");
+        //objectOfCollection.add("test2");
+        //objectOfCollection.add("test3");
+        return  this;
     }
-
 
     @Override
     public String toString() {

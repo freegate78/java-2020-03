@@ -3,13 +3,7 @@ package com.akproductions.myjson;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonNumber;
-import javax.json.JsonObject;
-import javax.json.JsonString;
-import javax.json.JsonStructure;
-import javax.json.JsonValue;
+import javax.json.*;
 
 
 import java.lang.reflect.Array;
@@ -23,7 +17,7 @@ import java.util.Optional;
 public class MyJson {
     public static void main(String[] args) throws Exception {
         Gson gson = new Gson();
-        AnyObject obj = new AnyObject();
+        AnyObject obj = new AnyObject().init();
         System.out.println(obj);
         String myJson = toMyJson(obj, AnyObject.class);
         System.out.println(myJson);
@@ -38,7 +32,137 @@ public class MyJson {
     }
 
     public enum FieldsToRead {
-        getInt(int.class), getByte(byte.class), getChar(char.class), getLong(long.class), getWInt(Integer.class), getWByte(Byte.class), getWChar(Character.class), getWLong(Long.class), getWARRINT(int[].class), getWARRBYTE(byte[].class), getWARRCHAR(char[].class), getWARRLONG(long[].class), getW_ARRINT(Integer[].class), getW_ARRBYTE(Byte[].class), getW_ARRCHAR(Character[].class), getW_ARRLONG(Long[].class), getWCOLLECTION(java.util.Collection.class);
+        getInt(int.class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                return Json.createObjectBuilder().add(field.getName(), field.getInt(object));
+            }
+        }, getByte(byte.class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                return Json.createObjectBuilder().add(field.getName(), field.getByte(object));
+            }
+        }, getChar(char.class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                return Json.createObjectBuilder().add(field.getName(), String.valueOf(field.getChar(object)));
+            }
+        }, getLong(long.class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                return Json.createObjectBuilder().add(field.getName(), field.getLong(object));
+            }
+        }, getWInt(Integer.class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                return Json.createObjectBuilder().add(field.getName(), (Integer) field.get(object));
+            }
+        }, getWByte(Byte.class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                return Json.createObjectBuilder().add(field.getName(), (Byte) field.get(object));
+            }
+        }, getWChar(Character.class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                return Json.createObjectBuilder().add(field.getName(), String.valueOf((Character) field.get(object)));
+            }
+        }, getWLong(Long.class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                return Json.createObjectBuilder().add(field.getName(), (Long) field.get(object));
+            }
+        }, getWARRINT(int[].class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                var jsonObjectInner = Json.createArrayBuilder();
+                var fieldValue = field.get(object);
+                for (int i = 0; i < Array.getLength(fieldValue); i++) {
+                    jsonObjectInner.add((int) Array.get(fieldValue, i));
+                }
+                return Json.createObjectBuilder().add(field.getName(), jsonObjectInner);
+            }
+        }, getWARRBYTE(byte[].class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                var jsonObjectInner = Json.createArrayBuilder();
+                var fieldValue = field.get(object);
+                for (int i = 0; i < Array.getLength(fieldValue); i++) {
+                    jsonObjectInner.add((byte) Array.get(fieldValue, i));
+                }
+                return Json.createObjectBuilder().add(field.getName(), jsonObjectInner);
+            }
+        }, getWARRCHAR(char[].class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                var jsonObjectInner = Json.createArrayBuilder();
+                var fieldValue = field.get(object);
+                for (int i = 0; i < Array.getLength(fieldValue); i++) {
+                    jsonObjectInner.add(String.valueOf(Array.get(fieldValue, i)));
+                }
+                return Json.createObjectBuilder().add(field.getName(), jsonObjectInner);
+            }
+        }, getWARRLONG(long[].class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                var jsonObjectInner = Json.createArrayBuilder();
+                var fieldValue = field.get(object);
+                for (int i = 0; i < Array.getLength(fieldValue); i++) {
+                    jsonObjectInner.add((long) Array.get(fieldValue, i));
+                }
+                return Json.createObjectBuilder().add(field.getName(), jsonObjectInner);
+            }
+        }, getW_ARRINT(Integer[].class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                var jsonObjectInner = Json.createArrayBuilder();
+                var fieldValue = field.get(object);
+                for (int i = 0; i < Array.getLength(fieldValue); i++) {
+                    jsonObjectInner.add((Integer) Array.get(fieldValue, i));
+                }
+                return Json.createObjectBuilder().add(field.getName(), jsonObjectInner);
+            }
+        }, getW_ARRBYTE(Byte[].class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                var jsonObjectInner = Json.createArrayBuilder();
+                var fieldValue = field.get(object);
+                for (int i = 0; i < Array.getLength(fieldValue); i++) {
+                    jsonObjectInner.add((Byte) Array.get(fieldValue, i));
+                }
+                return Json.createObjectBuilder().add(field.getName(), jsonObjectInner);
+            }
+        }, getW_ARRCHAR(Character[].class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                var jsonObjectInner = Json.createArrayBuilder();
+                var fieldValue = field.get(object);
+                for (int i = 0; i < Array.getLength(fieldValue); i++) {
+                    jsonObjectInner.add(String.valueOf(Array.get(fieldValue, i)));
+                }
+                return Json.createObjectBuilder().add(field.getName(), jsonObjectInner);
+            }
+        }, getW_ARRLONG(Long[].class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                var jsonObjectInner = Json.createArrayBuilder();
+                var fieldValue = field.get(object);
+                for (int i = 0; i < Array.getLength(fieldValue); i++) {
+                    jsonObjectInner.add((Long) Array.get(fieldValue, i));
+                }
+                return Json.createObjectBuilder().add(field.getName(), jsonObjectInner);
+            }
+        }, getWCOLLECTION(java.util.Collection.class) {
+            @Override
+            public JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException {
+                var jsonObjectInner = Json.createArrayBuilder();
+                var fieldValue = field.get(object);
+                for (int i = 0; i < Collection.class.cast(fieldValue).size(); i++) {
+                    jsonObjectInner.add(String.valueOf(Collection.class.cast(fieldValue).toArray()[i]));
+                }
+                return Json.createObjectBuilder().add(field.getName(), jsonObjectInner);
+            }
+        };
         final Class fieldsToRead;
 
         FieldsToRead(Class fieldsToRead) {
@@ -57,6 +181,8 @@ public class MyJson {
             }
             return Optional.empty();
         }
+
+        public abstract JsonObjectBuilder addToJson(Field field, Object object) throws IllegalAccessException;
     }
 
     private static String toMyJson(Object object, Class objClass) throws Exception {
@@ -67,77 +193,19 @@ public class MyJson {
         for (Field field : fieldsAll) {
             field.setAccessible(true);
 
-            System.out.println("field " + field.getName() + " is ");
+            if (FieldsToRead.find(field.getType()).isEmpty()) {
+                System.out.println("type of field " + field.getName() + " " + field.getType() + " is unsupported, skipping!!!");
+            } else {
+                System.out.println("field " + field.getName() + " is type of " + FieldsToRead.find(field.getType()).get().getFieldsToRead());
 
-            FieldsToRead fieldClass;
-            Class fieldClassType;
-            try {
-                fieldClass = FieldsToRead.find(field.getType()).get();
-                fieldClassType = fieldClass.getFieldsToRead();
-                Method method = Field.class.getMethod(FieldsToRead.find(field.getType()).get().name().replaceAll("(.+)W.+$", "$1"), new Class[]{java.lang.Object.class});
-                var fieldValue = method.invoke(field, object);
-                System.out.println("OBJECT type discovered by ENUM is " + fieldClass.name() + "(" + fieldClass.getFieldsToRead() + "), value is " + fieldValue);
-
-                if (fieldValue == null) {
+                if (field.get(object) == null) {
                     System.out.println("not need to serialize null like gson...");
-                } else if (int.class.equals(field.getType())) {
-                    jsonObject.add(field.getName(), (int) fieldValue);
-                    System.out.println("serialize primitive int ");
-                } else if (long.class.equals(field.getType())) {
-                    jsonObject.add(field.getName(), (long) fieldValue);
-                    System.out.println("serialize primitive long ");
-                } else if (byte.class.equals(field.getType())) {
-                    jsonObject.add(field.getName(), (byte) fieldValue);
-                    System.out.println("serialize primitive byte ");
-                } else if (Integer.class.equals(field.getType())) {
-                    jsonObject.add(field.getName(), (Integer) fieldValue);
-                    System.out.println("serialize  " + fieldClassType);
-                } else if (Long.class.equals(field.getType())) {
-                    jsonObject.add(field.getName(), (Long) fieldValue);
-                    System.out.println("serialize  " + fieldClassType);
-                } else if (Byte.class.equals(field.getType())) {
-                    jsonObject.add(field.getName(), (Byte) fieldValue);
-                    System.out.println("serialize  " + fieldClassType);
-                } else if (fieldClass.name().contains("ARR")) {
-                    System.out.println("serialize  ARR " + fieldClassType);
-                    var jsonObjectInner = Json.createArrayBuilder();
-                    System.out.println("array size  is " + Array.getLength(fieldValue));
-                    for (int i = 0; i < Array.getLength(fieldValue); i++) {
-                        System.out.println("array element[" + i + "] is " + Array.get(fieldValue, i));
-                        if (int[].class.equals(field.getType()) || Integer[].class.equals(field.getType())) {
-                            jsonObjectInner.add((int) Array.get(fieldValue, i));
-                        } else if (byte[].class.equals(field.getType()) || Byte[].class.equals(field.getType())) {
-                            jsonObjectInner.add((byte) Array.get(fieldValue, i));
-                        } else if (char[].class.equals(field.getType()) || Character[].class.equals(field.getType())) {
-                            jsonObjectInner.add(String.valueOf(Array.get(fieldValue, i)));
-                        } else if (long[].class.equals(field.getType()) || Long[].class.equals(field.getType())) {
-                            jsonObjectInner.add((long) Array.get(fieldValue, i));
-                        }
-
-                    }
-                    jsonObject.add(field.getName(), jsonObjectInner);
-
-                } else if (fieldClass.name().contains("COLLECTION")) {
-                    System.out.println("serialize  Collection " + fieldClassType);
-                    var jsonObjectInner = Json.createArrayBuilder();
-                    System.out.println("collection size  is " + Collection.class.cast(fieldValue).size());
-                    for (int i = 0; i < Collection.class.cast(fieldValue).size(); i++) {
-                        System.out.println("collection element[" + i + "] is " + Collection.class.cast(fieldValue).toArray()[i]);
-                        jsonObjectInner.add(String.valueOf(Collection.class.cast(fieldValue).toArray()[i]));
-                    }
-                    jsonObject.add(field.getName(), jsonObjectInner);
                 } else {
-                    jsonObject.add(field.getName(), String.valueOf(fieldValue));
-                    System.out.println("serialize by default as string - type is  " + fieldClassType);
+                    System.out.println("convert to json with factory handler " + FieldsToRead.find(field.getType()).get().name());
+                    jsonObject.addAll(FieldsToRead.find(field.getType()).get().addToJson(field, object));
                 }
-
-            } catch (Exception e) {
-                System.out.println("Serialize action - Unrecognized type  " + field.getType() + " !!!" + e.getLocalizedMessage() + e.getStackTrace());
             }
-            ;
-
         }
         return jsonObject.build().toString();
     }
-
 }
